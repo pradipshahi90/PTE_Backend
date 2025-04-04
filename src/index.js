@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import authRoutes from './routes/authRoutes.js';
 import { protect, admin } from './middleware/authMiddleware.js';
 import cors from 'cors';
+import materialRoutes from "./routes/materialRoutes.js";
 
 
 dotenv.config(); // Load .env variables
@@ -27,10 +28,13 @@ app.get("/", (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 
+
 // Example of a protected route (only accessible by admin)
 app.get('/api/admin', protect, admin, (req, res) => {
     res.json({ message: 'Welcome, admin' });
 });
+app.use('/api/reading-materials', materialRoutes);
+
 
 
 const PORT = process.env.PORT || 5001;
