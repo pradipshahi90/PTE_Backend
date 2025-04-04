@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const readingMaterialSchema = mongoose.Schema({
     title: {
         type: String,
         required: true
+    },
+    slug: {
+        type: String,
+        unique: true
     },
     type: {
         type: String,
@@ -21,18 +26,37 @@ const readingMaterialSchema = mongoose.Schema({
     options: [
         {
             text: { type: String, required: true },
-            isCorrect: { type: Boolean, required: true },
-            order: { type: Number, default: 0 }  // Only relevant for re-order tasks
+            isCorrect: {
+                type: Boolean,
+                required: function () { return this.type !== 'reorder'; }
+            },
+            order: {
+                type: Number,
+                default: null,
+                required: function () { return this.type === 'reorder'; }
+            }
         }
     ],
     fileUrl: {
         type: String,
-        default: null  // Optional URL for PDF or any related files
+        default: null
     },
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    isPremium: {
+        type: Boolean,
+        default: false  // Default to 'false' if not specified
     }
+});
+
+// Auto-generate or update slug before saving
+readingMaterialSchema.pre('save', function (next) {
+    if (!this.slug || this.isModified('title')) {
+        this.slug = slugify(this.title, { lower: true, strict: true });
+    }
+    next();
 });
 
 export default mongoose.model("ReadingMaterial", readingMaterialSchema);

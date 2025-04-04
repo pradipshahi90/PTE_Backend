@@ -1,11 +1,23 @@
 import ReadingMaterial from '../models/ReadingMaterial.js';
 
+// Helper function to filter options
+const filterOptions = (type, options) => {
+    return options.map(option => {
+        let filteredOption = { text: option.text };
+        if (type !== 'reorder') {
+            filteredOption.isCorrect = option.isCorrect;
+        } else {
+            filteredOption.order = option.order;
+        }
+        return filteredOption;
+    });
+};
+
 // Create new reading material
 export const createReadingMaterial = async (req, res) => {
     try {
-        const { title, type, content, options, fileUrl, passage } = req.body;
+        const { title, type, content, options, fileUrl, passage, isPremium } = req.body;
 
-        // Validate required fields
         if (!title || !type || !content || !options) {
             return res.status(400).json({ status: false, message: 'Please provide all required fields.' });
         }
@@ -16,7 +28,8 @@ export const createReadingMaterial = async (req, res) => {
             content,
             options,
             fileUrl,
-            passage // Optional passage
+            passage,
+            isPremium, // Make sure isPremium is added here
         });
 
         await newReadingMaterial.save();
@@ -25,12 +38,14 @@ export const createReadingMaterial = async (req, res) => {
             message: 'Reading material created successfully.',
             readingMaterial: {
                 id: newReadingMaterial._id,
+                slug: newReadingMaterial.slug,
                 title: newReadingMaterial.title,
                 type: newReadingMaterial.type,
                 content: newReadingMaterial.content,
-                options: newReadingMaterial.options,
+                options: filterOptions(newReadingMaterial.type, newReadingMaterial.options),
                 fileUrl: newReadingMaterial.fileUrl,
-                passage: newReadingMaterial.passage, // Include passage in the response
+                passage: newReadingMaterial.passage,
+                isPremium: newReadingMaterial.isPremium, // Include isPremium in the response
                 createdAt: newReadingMaterial.createdAt
             }
         });
@@ -46,12 +61,14 @@ export const getAllReadingMaterials = async (req, res) => {
         const readingMaterials = await ReadingMaterial.find();
         const formattedMaterials = readingMaterials.map(material => ({
             id: material._id,
+            slug: material.slug,
             title: material.title,
             type: material.type,
             content: material.content,
-            options: material.options,
+            options: filterOptions(material.type, material.options),
             fileUrl: material.fileUrl,
-            passage: material.passage, // Include passage
+            passage: material.passage,
+            isPremium: material.isPremium, // Include isPremium here as well
             createdAt: material.createdAt
         }));
 
@@ -62,10 +79,10 @@ export const getAllReadingMaterials = async (req, res) => {
     }
 };
 
-// Get a specific reading material by ID
-export const getReadingMaterialById = async (req, res) => {
+// Get a specific reading material by slug
+export const getReadingMaterialBySlug = async (req, res) => {
     try {
-        const material = await ReadingMaterial.findById(req.params.id);
+        const material = await ReadingMaterial.findOne({ slug: req.params.slug });
         if (!material) {
             return res.status(404).json({ status: false, message: 'Reading material not found.' });
         }
@@ -74,12 +91,14 @@ export const getReadingMaterialById = async (req, res) => {
             status: true,
             readingMaterial: {
                 id: material._id,
+                slug: material.slug,
                 title: material.title,
                 type: material.type,
                 content: material.content,
-                options: material.options,
+                options: filterOptions(material.type, material.options),
                 fileUrl: material.fileUrl,
-                passage: material.passage, // Include passage
+                passage: material.passage,
+                isPremium: material.isPremium, // Include isPremium here as well
                 createdAt: material.createdAt
             }
         });
@@ -101,12 +120,14 @@ export const updateReadingMaterial = async (req, res) => {
             message: 'Reading material updated successfully.',
             readingMaterial: {
                 id: updatedMaterial._id,
+                slug: updatedMaterial.slug,
                 title: updatedMaterial.title,
                 type: updatedMaterial.type,
                 content: updatedMaterial.content,
-                options: updatedMaterial.options,
+                options: filterOptions(updatedMaterial.type, updatedMaterial.options),
                 fileUrl: updatedMaterial.fileUrl,
-                passage: updatedMaterial.passage, // Include passage
+                passage: updatedMaterial.passage,
+                isPremium: updatedMaterial.isPremium, // Include isPremium here as well
                 createdAt: updatedMaterial.createdAt
             }
         });
