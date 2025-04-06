@@ -5,7 +5,7 @@ import {
     getAllReadingMaterials,
     getReadingMaterialBySlug,
     updateReadingMaterial,
-    deleteReadingMaterial
+    deleteReadingMaterial, filterReadingMaterials
 } from '../controllers/materialController.js';
 
 const router = express.Router();
@@ -13,6 +13,8 @@ const router = express.Router();
 // Admin routes for managing reading materials
 router.post('/create', protect, admin, createReadingMaterial);
 router.get('/', getAllReadingMaterials);
+router.get('/filter', filterReadingMaterials);
+
 
 // Changed: Get reading material by slug instead of ID
 router.get('/:slug', getReadingMaterialBySlug);

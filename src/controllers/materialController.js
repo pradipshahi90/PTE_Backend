@@ -79,6 +79,40 @@ export const getAllReadingMaterials = async (req, res) => {
     }
 };
 
+// Filter reading materials by title only
+export const filterReadingMaterials = async (req, res) => {
+    try {
+        const { title } = req.query;
+
+        if (!title) {
+            return res.status(400).json({ status: false, message: 'Title query is required.' });
+        }
+
+        const readingMaterials = await ReadingMaterial.find({
+            title: { $regex: title, $options: 'i' } // Case-insensitive, partial match
+        });
+
+        const formattedMaterials = readingMaterials.map(material => ({
+            id: material._id,
+            slug: material.slug,
+            title: material.title,
+            type: material.type,
+            content: material.content,
+            options: filterOptions(material.type, material.options),
+            fileUrl: material.fileUrl,
+            passage: material.passage,
+            isPremium: material.isPremium,
+            createdAt: material.createdAt
+        }));
+
+        res.status(200).json({ status: true, readingMaterials: formattedMaterials });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, message: 'Failed to filter reading materials.' });
+    }
+};
+
+
 // Get a specific reading material by slug
 export const getReadingMaterialBySlug = async (req, res) => {
     try {
