@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'], // Role can be 'user' or 'admin'
         default: 'user', // Default role is 'user'
     },
+    active: {
+        type: Boolean,
+        default: true, // Users are active by default
+    }
 }, { timestamps: true });
 
 // Encrypt password before saving
