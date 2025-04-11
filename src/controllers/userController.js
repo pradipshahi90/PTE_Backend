@@ -1,10 +1,11 @@
 // Get all users
 import User from "../models/User.js";
 
+// Get all users
 export const getAllUsers = async (req, res) => {
     try {
         const users = await User.find({}).select('-password');
-        res.json({ status: true, users });
+        res.json({ status: true, message: 'Users fetched successfully', users: users.map(user => ({ ...user.toObject(), id: user._id.toString() })) });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error', error: error.message });
     }
@@ -17,7 +18,7 @@ export const getUserById = async (req, res) => {
         if (!user) {
             return res.status(404).json({ status: false, message: 'User not found' });
         }
-        res.json({ status: true, user });
+        res.json({ status: true, message: 'User fetched successfully', user: { ...user.toObject(), id: user._id.toString() } });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error', error: error.message });
     }
@@ -47,7 +48,8 @@ export const createUser = async (req, res) => {
         if (user) {
             res.status(201).json({
                 status: true,
-                _id: user._id,
+                message: 'User created successfully',
+                id: user._id.toString(),  // Send the id as a string
                 name: user.name,
                 email: user.email,
                 role: user.role,
@@ -71,12 +73,21 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ status: false, message: 'User not found' });
         }
 
+        // Check if the new email already exists for another user
+        if (req.body.email && req.body.email !== user.email) {
+            const emailExists = await User.findOne({ email: req.body.email });
+            if (emailExists && emailExists._id.toString() !== user._id.toString()) {
+                return res.status(400).json({ status: false, message: 'Email already in use by another user' });
+            }
+        }
+
         // Update fields if provided
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.role = req.body.role || user.role;
-        user.is_premium_purchased = req.body.is_premium_purchased !== undefined ?
-            req.body.is_premium_purchased : user.is_premium_purchased;
+        user.is_premium_purchased = req.body.is_premium_purchased !== undefined
+            ? req.body.is_premium_purchased
+            : user.is_premium_purchased;
         user.active = req.body.active !== undefined ? req.body.active : user.active;
 
         // Only update password if provided
@@ -88,7 +99,8 @@ export const updateUser = async (req, res) => {
 
         res.json({
             status: true,
-            _id: updatedUser._id,
+            message: 'User updated successfully',
+            id: updatedUser._id.toString(),
             name: updatedUser.name,
             email: updatedUser.email,
             role: updatedUser.role,
@@ -115,7 +127,7 @@ export const deleteUser = async (req, res) => {
         }
 
         await User.deleteOne({ _id: req.params.id });
-        res.json({ status: true, message: 'User removed' });
+        res.json({ status: true, message: 'User removed successfully' });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error', error: error.message });
     }
@@ -136,11 +148,11 @@ export const toggleUserStatus = async (req, res) => {
 
         res.json({
             status: true,
-            _id: user._id,
+            message: user.active ? 'User activated successfully' : 'User deactivated successfully',
+            id: user._id.toString(),  // Send the id as a string
             name: user.name,
             email: user.email,
-            active: user.active,
-            message: user.active ? 'User activated' : 'User deactivated'
+            active: user.active
         });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error', error: error.message });
