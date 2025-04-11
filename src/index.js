@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import materialRoutes from "./routes/materialRoutes.js";
 import cors from 'cors';
 import userRoutes from "./routes/userRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', userRoutes);
 app.use('/api/reading-materials', materialRoutes);
+app.use('/api/payment', paymentRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
