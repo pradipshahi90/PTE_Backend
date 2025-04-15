@@ -6,6 +6,8 @@ import materialRoutes from "./routes/materialRoutes.js";
 import cors from 'cors';
 import userRoutes from "./routes/userRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import questionRoutes from "./routes/questionRoutes.js";
+import examRoutes from "./routes/examRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -31,6 +33,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', userRoutes);
 app.use('/api/reading-materials', materialRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/exams', examRoutes);
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
