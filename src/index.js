@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import questionRoutes from "./routes/questionRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
+import speakingRoutes from "./routes/speakingRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -35,6 +36,8 @@ app.use('/api/reading-materials', materialRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/exams', examRoutes);
+app.use('/api/speaking', speakingRoutes);
+
 
 
 const PORT = process.env.PORT || 5001;
