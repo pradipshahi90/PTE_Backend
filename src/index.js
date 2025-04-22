@@ -9,6 +9,9 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import questionRoutes from "./routes/questionRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
 import speakingRoutes from "./routes/speakingRoutes.js";
+import courseRoutes from "./routes/courseRoute.js";
+
+
 
 dotenv.config(); // Load .env variables
 
@@ -37,6 +40,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/speaking', speakingRoutes);
+app.use('/api/courses',courseRoutes)
 
 
 
