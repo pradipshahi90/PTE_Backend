@@ -10,6 +10,7 @@ import questionRoutes from "./routes/questionRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
 import speakingRoutes from "./routes/speakingRoutes.js";
 import examResults from "./routes/examResults.js";
+import path from 'path';
 
 import examResults from "./routes/examResults.js";
 import path from 'path';
@@ -49,8 +50,6 @@ app.use('/api/exams', examRoutes);
 app.use('/api/speaking', speakingRoutes);
 app.use('/api/exam-results', examResults);
 app.use('/api/courses',courseRoutes)
-
-
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
