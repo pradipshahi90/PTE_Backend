@@ -10,7 +10,7 @@ import questionRoutes from "./routes/questionRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
 import speakingRoutes from "./routes/speakingRoutes.js";
 import examResults from "./routes/examResults.js";
-
+import path from 'path';
 
 dotenv.config(); // Load .env variables
 
@@ -27,6 +27,9 @@ app.use(cors({
 
 app.use(express.json()); // Middleware for JSON parsing
 
+// ✅ Serve static files from the /uploads folder
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
@@ -40,8 +43,6 @@ app.use('/api/questions', questionRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/speaking', speakingRoutes);
 app.use('/api/exam-results', examResults);
-
-
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

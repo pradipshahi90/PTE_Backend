@@ -19,10 +19,20 @@ const ExamResultSchema = new mongoose.Schema({
         possibleScore: Number,
         percentage: Number,
     },
+    totalMarks: {
+        type: Number,
+        default: null, // Admin will assign this later
+    },
+    isResultChecked: {
+        type: Boolean,
+        default: false, // Initially false until admin verifies/assigns marks
+    },
     speakingTest: [mongoose.Schema.Types.Mixed],
-    submittedAt: Date,
+    submittedAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
-
 
 const ExamResult = mongoose.model('ExamResult', ExamResultSchema);
 export default ExamResult;
