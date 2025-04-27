@@ -3,7 +3,7 @@ import User from '../models/User.js';  // Import the User model
 
 export const savePayment = async (req, res) => {
     try {
-        const { user, payment } = req.body;
+        const { user, payment, subscription } = req.body;
 
         // Create and save the payment record
         const newPayment = new Payment({
@@ -21,10 +21,15 @@ export const savePayment = async (req, res) => {
 
         await newPayment.save();
 
-        // Update the user's premium status
+        // Update the user's premium status and subscription details
         await User.findByIdAndUpdate(
             user.id,
-            { is_premium_purchased: true },
+            {
+                is_premium_purchased: true,
+                subscription_type: subscription.subscription_type,
+                subscription_start: new Date(subscription.subscription_start),
+                subscription_end: new Date(subscription.subscription_end)
+            },
             { new: true }  // This returns the updated document
         );
 

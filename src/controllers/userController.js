@@ -90,6 +90,22 @@ export const updateUser = async (req, res) => {
             : user.is_premium_purchased;
         user.active = req.body.active !== undefined ? req.body.active : user.active;
 
+        // Handle subscription updates
+        if (req.body.subscription_type) {
+            user.subscription_type = req.body.subscription_type;
+
+            const now = new Date();
+            user.subscription_start = now;
+
+            if (req.body.subscription_type === 'monthly') {
+                user.subscription_end = new Date(now.setMonth(now.getMonth() + 1)); // +1 month
+            } else if (req.body.subscription_type === 'yearly') {
+                user.subscription_end = new Date(now.setFullYear(now.getFullYear() + 1)); // +1 year
+            } else {
+                user.subscription_end = null;
+            }
+        }
+
         // Only update password if provided
         if (req.body.password) {
             user.password = req.body.password;
@@ -105,7 +121,10 @@ export const updateUser = async (req, res) => {
             email: updatedUser.email,
             role: updatedUser.role,
             is_premium_purchased: updatedUser.is_premium_purchased,
-            active: updatedUser.active
+            active: updatedUser.active,
+            subscription_type: updatedUser.subscription_type,
+            subscription_start: updatedUser.subscription_start,
+            subscription_end: updatedUser.subscription_end,
         });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error', error: error.message });
