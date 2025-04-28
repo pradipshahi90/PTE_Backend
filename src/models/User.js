@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     subscription_type: {
         type: String,
-        enum: ['monthly', 'yearly', null], // Can be 'monthly', 'yearly', or null if not subscribed
+        enum: ['monthly', 'yearly', null],
         default: null,
     },
     subscription_start: {
@@ -40,7 +40,25 @@ const userSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         default: true,
-    }
+    },
+    // Add these fields for OTP functionality
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    otp: {
+        type: String,
+    },
+    otpExpiry: {
+        type: Date,
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpiry: {
+        type: Date,
+    },
+
 }, { timestamps: true });
 
 // Encrypt password before saving
@@ -55,7 +73,7 @@ userSchema.methods.comparePassword = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
-// (Optional) Method to check if subscription is still valid
+// Method to check if subscription is still valid
 userSchema.methods.isSubscriptionActive = function() {
     if (!this.subscription_end) return false;
     return new Date() <= this.subscription_end;
