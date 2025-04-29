@@ -19,6 +19,7 @@ const ExamResultSchema = new mongoose.Schema({
         possibleScore: Number,
         percentage: Number,
     },
+<<<<<<< HEAD
     totalMarks: {
         type: Number,
         default: null, // Admin will assign this later
@@ -34,5 +35,12 @@ const ExamResultSchema = new mongoose.Schema({
     },
 });
 
+=======
+    speakingTest: [mongoose.Schema.Types.Mixed],
+    submittedAt: Date,
+});
+
+
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
 const ExamResult = mongoose.model('ExamResult', ExamResultSchema);
 export default ExamResult;

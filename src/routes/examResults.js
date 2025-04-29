@@ -1,11 +1,15 @@
 import express from 'express';
+<<<<<<< HEAD
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+=======
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
 import ExamResult from '../models/ExamResult.js';
 
 const router = express.Router();
 
+<<<<<<< HEAD
 // Ensure the uploads directory exists
 const audioDir = path.join(process.cwd(), 'uploads/audio');
 if (!fs.existsSync(audioDir)) {
@@ -47,14 +51,25 @@ router.post('/', async (req, res) => {
             };
         });
 
+=======
+// POST route to store exam results
+router.post('/', async (req, res) => {
+    const { examId, examTitle, score, questionsWithAnswers, userId } = req.body;
+
+    try {
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
         const newExamResult = new ExamResult({
             examId,
             examTitle,
             score,
             questionsWithAnswers,
+<<<<<<< HEAD
             speakingTest: processedSpeakingTest,
             userId,
             submittedAt: new Date(),
+=======
+            userId,
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
         });
 
         await newExamResult.save();
@@ -65,6 +80,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 // PUT route to update exam result grading (admin only)
 router.put('/:resultId', async (req, res) => {
     const { resultId } = req.params;
@@ -169,12 +185,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+=======
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
 // GET route to fetch all exam results for a specific user
 router.get('/:userId', async (req, res) => {
     const { userId } = req.params;
 
     try {
+<<<<<<< HEAD
         const examResults = await ExamResult.find({ userId }).populate('examId');
+=======
+        const examResults = await ExamResult.find({ userId });
+>>>>>>> 5d30f3c (feat(exam): Add exam submit)
         res.status(200).json(examResults);
     } catch (error) {
         console.error('Error retrieving exam results:', error);

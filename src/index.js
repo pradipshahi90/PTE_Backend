@@ -10,6 +10,8 @@ import questionRoutes from "./routes/questionRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
 import speakingRoutes from "./routes/speakingRoutes.js";
 import examResults from "./routes/examResults.js";
+
+import examResults from "./routes/examResults.js";
 import path from 'path';
 import courseRoutes from "./routes/courseRoute.js";
 
