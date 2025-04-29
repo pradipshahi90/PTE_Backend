@@ -33,6 +33,8 @@ app.use(cors({
 
 app.use(express.json()); // Middleware for JSON parsing
 
+
+
 // ✅ Serve static files from the /uploads folder
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
